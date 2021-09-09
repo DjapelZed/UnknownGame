@@ -21,7 +21,8 @@ class Game:
         while self.running:
             self.dt = self.clock.tick(FPS) / 1000
             for event in pg.event.get():
-                if event.type == pg.QUIT:
+                if event.type == pg.QUIT or (event.type == pg.KEYUP 
+                                            and event.key == pg.K_ESCAPE):
                     self.running = False
 
             self.update()
@@ -35,7 +36,7 @@ class Game:
 
 
     def update(self):
-        pass
+        self.player.update()
 
 
     def setup_animations(self):

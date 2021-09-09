@@ -1,3 +1,4 @@
+import math
 from typing import Collection
 import pygame as pg
 from enum import Flag, auto
@@ -14,17 +15,23 @@ class AnimationState(Flag):
 
 
 class Player(pg.sprite.Sprite):
+    
+    BASE_SPEED = 20
+
     def __init__(self, position: Collection, animation: Animation, game):
         super().__init__()
         self.game = game
         self.animation = animation
-        self.image = animation.image
+        try:
+            self.image = animation.image 
+        except AttributeError:
+            raise TypeError("Animation should be an animation")
         self.rect = self.image.get_rect()
         self.rect.center = position
 
 
     def update(self):
-       pass 
+       self.move()
 
 
     def draw(self, surface=None):
@@ -36,6 +43,18 @@ class Player(pg.sprite.Sprite):
         self.animation.set_next_frame()
 
 
+    def move(self):
+        keys = pg.key.get_pressed()
+        if keys[pg.K_LEFT]:
+            # если -speed*dt<1, тогда python округяет значение до -1 (пикселя)
+            self.rect.x -= Player.BASE_SPEED*self.game.dt
+        if keys[pg.K_RIGHT]:
+            # если speed*dt<1, тогда python округяет значение до 0 (пикселей) и движения нет
+            self.rect.x += math.ceil(Player.BASE_SPEED*self.game.dt)
+        if keys[pg.K_SPACE]:
+            self._jump()
+        print(Player.BASE_SPEED*self.game.dt)
+    
     def set_animation(self, animation: Animation):
         if animation is Animation:
             self.animation = animation
