@@ -2,6 +2,7 @@ import pygame as pg
 from player import Player
 from animation import Animation
 from world import Physics
+from blocks import Block
 from settings import *
 
 class Game:
@@ -34,11 +35,13 @@ class Game:
 
     def draw(self):
         self.screen.fill((120, 80, 200))
-        self.player.draw()
+        self.physics_group.draw(self.screen)
+        self.static_group.draw(self.screen)
 
 
     def update(self):
         self.player.update()
+        self.player2.update()
         self.physics.gravity()
 
 
@@ -84,14 +87,22 @@ class Game:
         # self.jump_animation = Animation(surfaces)
 
     def setup_physics(self):
-        self.physics = Physics(self.all_sprites.sprites())
+        self.physics = Physics(self)
 
     def setup_sprites(self):
-        self.all_sprites = pg.sprite.Group()
+        self.physics_group = pg.sprite.Group()
+        self.static_group = pg.sprite.Group()
         # TODO: Загрузка спрайтов из Spritesheet
         self.player = Player(position=(200, 300), animation=self.basic_animation, game=self)
+        self.player2 = Player(position=(300, 300), animation=self.basic_animation, game=self)
         
-        self.all_sprites.add(self.player)
+        block_img = pg.Surface((30, 30))
+        self.block = Block((190, 500), block_img)
+        
+        self.physics_group.add(self.player)
+        self.physics_group.add(self.player2)
+        
+        self.static_group.add(self.block)
 
 if __name__ == '__main__':
     game = Game()

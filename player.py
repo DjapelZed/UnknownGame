@@ -27,7 +27,8 @@ class Player(pg.sprite.Sprite):
         except AttributeError:
             raise TypeError("Animation should be an animation")
         self.rect = self.image.get_rect()
-        self.rect.center = position
+        self.rect.bottomleft = position
+        self.on_ground = False
 
 
     def update(self):
@@ -53,8 +54,13 @@ class Player(pg.sprite.Sprite):
             self.rect.x += math.ceil(Player.BASE_SPEED*self.game.dt)
         if keys[pg.K_SPACE]:
             self._jump()
-        print(Player.BASE_SPEED*self.game.dt)
     
+    # def _jump(self):
+    #     if self.on_ground:
+    #         self.rect.y -= 1000*self.game.dt
+    #         self.on_ground = False
+
+
     def set_animation(self, animation: Animation):
         if animation is Animation:
             self.animation = animation
