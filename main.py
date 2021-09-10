@@ -1,6 +1,7 @@
 import pygame as pg
 from player import Player
 from animation import Animation
+from world import Physics
 from settings import *
 
 class Game:
@@ -11,6 +12,7 @@ class Game:
         self.running = True
         self.setup_animations()
         self.setup_sprites()
+        self.setup_physics()
     
 
     def run(self):
@@ -37,6 +39,7 @@ class Game:
 
     def update(self):
         self.player.update()
+        self.physics.gravity()
 
 
     def setup_animations(self):
@@ -80,11 +83,15 @@ class Game:
         # surfaces = get_surfaces(image_paths)
         # self.jump_animation = Animation(surfaces)
 
+    def setup_physics(self):
+        self.physics = Physics(self.all_sprites.sprites())
 
     def setup_sprites(self):
+        self.all_sprites = pg.sprite.Group()
         # TODO: Загрузка спрайтов из Spritesheet
         self.player = Player(position=(200, 300), animation=self.basic_animation, game=self)
-
+        
+        self.all_sprites.add(self.player)
 
 if __name__ == '__main__':
     game = Game()
